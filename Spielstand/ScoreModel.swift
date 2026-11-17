@@ -28,6 +28,13 @@ final class ScoreModel {
         }
     }
 
+    /// Sets both scores back to 0 and clears the undo history. Team names stay.
+    func reset() {
+        homeScore = 0
+        guestScore = 0
+        history.removeAll()
+    }
+
     /// Short description of what the next undo removes, e.g. "Home +2".
     var lastActionLabel: String? {
         guard let last = history.last else { return nil }

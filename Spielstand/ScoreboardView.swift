@@ -16,6 +16,8 @@ struct ScoreboardView: View {
         return model
     }()
 
+    @State private var showResetConfirmation = false
+
     private let homeColor = Color(red: 0.06, green: 0.43, blue: 0.34)   // teal
     private let guestColor = Color(red: 0.60, green: 0.24, blue: 0.11)  // coral
 
@@ -31,6 +33,8 @@ struct ScoreboardView: View {
             Divider()
 
             VStack(spacing: 8) {
+                Spacer()
+
                 Button {
                     model.undo()
                 } label: {
@@ -52,6 +56,27 @@ struct ScoreboardView: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
+
+                Spacer()
+
+                Button(role: .destructive) {
+                    showResetConfirmation = true
+                } label: {
+                    Label("Reset", systemImage: "arrow.counterclockwise")
+                        .font(.footnote.weight(.semibold))
+                }
+                .buttonStyle(.bordered)
+                .disabled(model.history.isEmpty)
+                .confirmationDialog(
+                    "Reset both scores to 0?",
+                    isPresented: $showResetConfirmation,
+                    titleVisibility: .visible
+                ) {
+                    Button("Reset score", role: .destructive) { model.reset() }
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("Team names stay. This can't be undone.")
+                }
             }
             .frame(width: 100)
 
